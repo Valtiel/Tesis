@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<beans:beans
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns="http://www.springframework.org/schema/security">
+	
+<http pattern="/admin/**" >
+  <intercept-url pattern="/admin/adminPanel" access="ROLE_ADMIN" />
+  <form-login login-page="/admin/login" login-processing-url="/admin/adminPanel.do" default-target-url="/admin/adminPanel"
+    authentication-failure-url="/loginfailed" />
+    <intercept-url pattern="/client/add.htm" access="ROLE_ADMIN" />
+		<intercept-url pattern="/client/listAll.htm" access="ROLE_ADMIN" />
+		<intercept-url pattern="/drug*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/ClientImages/file.htm" access="ROLE_ADMIN" />
+		<intercept-url pattern="/institution*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/medic*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/note/*" access="ROLE_USER" />
+		<intercept-url pattern="/problem/*" access="ROLE_USER" />
+		<intercept-url pattern="/records/*" access="ROLE_USER" />
+		<intercept-url pattern="/relationClient/*" access="ROLE_USER" />
+  <logout logout-success-url="/logout" />
+</http>
+
+	<http auto-config="true">
+	  <intercept-url pattern="/admin/adminPanel" access="ROLE_ADMIN" />
+		<intercept-url pattern="/user/clientView" access="ROLE_USER" />
+		<form-login login-page="/login" default-target-url="/user/clientView"
+			authentication-failure-url="/loginfailed" />
+		<intercept-url pattern="/client/add.htm" access="ROLE_ADMIN" />
+		<intercept-url pattern="/client/listAll.htm" access="ROLE_ADMIN" />
+		<intercept-url pattern="/drug*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/ClientImages/file.htm" access="ROLE_ADMIN" />
+		<intercept-url pattern="/institution*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/medic*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/note/*" access="ROLE_USER" />
+		<intercept-url pattern="/problem/*" access="ROLE_USER" />
+		<intercept-url pattern="/records/*" access="ROLE_USER" />
+		<intercept-url pattern="/relationClient/*" access="ROLE_USER" />
+		<logout logout-success-url="/logout" />
+	</http>
+	
+
+	<authentication-manager>
+		<authentication-provider>
+			<password-encoder hash="sha" />
+			<jdbc-user-service data-source-ref="dataSource"
+
+				users-by-username-query="
+		      select username,password,'true' as enabled 
+		      from medic where username=?"
+
+				authorities-by-username-query="
+		      select u.username, ur.authority as authorities from medic u, user_roles ur 
+		      where u.idMedic = ur.user_id and u.username =? " />
+
+		</authentication-provider>
+	</authentication-manager>
+</beans:beans>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+">
+	<context:component-scan base-package="net.webapplication.controller" />
+	<mvc:annotation-driven />
+	<!-- not strictly necessary for this example, but still useful, see http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-ann-controller 
+		for more information -->
+	<context:component-scan base-package="springmvc.web" />
+
+	<!-- the mvc resources tag does the magic -->
+	<mvc:resources mapping="/static/**" location="/static/, classpath:/META-INF/static" />
+	<mvc:default-servlet-handler />
+
+	<!-- also add the following beans to get rid of some exceptions -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+	</bean>
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- the maximum file size in bytes = 10MB -->
+		<property name="maxUploadSize" value="10485760" />
+	</bean>
+	
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/medicwebapp" />
+		<property name="username" value="root" />
+		<property name="password" value="password" />
+	</bean>
+
+	<bean id="clientDAO" class="net.webapplication.dao.jdbc.ClientJDBCTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	
+	<bean id="clientController" class="net.webapplication.controller.ClientController">
+		<property name="clientDAO" ref="clientDAO" />
+	</bean>
+
+	<bean id="institutionDAO" class="net.webapplication.dao.jdbc.InstitutionJDBCTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	<bean id="institutionController" class="net.webapplication.controller.InstitutionController">
+		<property name="institutionDAO" ref="institutionDAO" />
+	</bean>
+
+	<bean id="problemDAO" class="net.webapplication.dao.jdbc.ProblemJDBCTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	<bean id="problemController" class="net.webapplication.controller.ProblemController">
+		<property name="problemDAO" ref="problemDAO" />
+	</bean>
+
+	<bean id="medicDAO" class="net.webapplication.dao.jdbc.MedicJDBCTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+
+	<bean id="medicController" class="net.webapplication.controller.MedicController">
+		<property name="medicDAO" ref="medicDAO" />
+	</bean>
+
+	<bean id="drugDAO" class="net.webapplication.dao.jdbc.DrugJDBCTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+
+	<bean id="drugController" class="net.webapplication.controller.DrugController">
+		<property name="drugDAO" ref="drugDAO" />
+	</bean>
+	<bean id="noteDAO" class="net.webapplication.dao.jdbc.NoteJDBCTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	<bean id="noteController" class="net.webapplication.controller.NoteController">
+		<property name="noteDAO" ref="noteDAO" />
+	</bean>
+	<bean id="prescriptionDAO" class="net.webapplication.dao.jdbc.PrescriptionJDBCTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	<bean id="prescriptionController" class="net.webapplication.controller.PrescriptionController">
+		<property name="prescriptionDAO" ref="prescriptionDAO" />
+	</bean>
+	<bean id="recordDAO" class="net.webapplication.dao.jdbc.RecordJDBCTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	<bean id="recordController" class="net.webapplication.controller.RecordController">
+		<property name="recordDAO" ref="recordDAO" />
+	</bean>
+
+	<bean id="ImageDAO" class="net.webapplication.dao.jdbc.ImageJDBCTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	<bean id="imageController" class="net.webapplication.controller.ImageController">
+		<property name="ImageDAO" ref="ImageDAO" />
+	</bean>
+
+	<bean id="RelationAdminDAO" class="net.webapplication.dao.jdbc.RelationAdminJDBCTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	<bean id="relationAdminController" class="net.webapplication.controller.RelationAdminController">
+		<property name="RelationAdminDAO" ref="RelationAdminDAO" />
+	</bean>
+
+	<bean id="RelationClientDAO" class="net.webapplication.dao.jdbc.RelationClientJDBCTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	<bean id="relationClientController" class="net.webapplication.controller.RelationClientController">
+		<property name="RelationClientDAO" ref="RelationClientDAO" />
+	</bean>
+</beans>
